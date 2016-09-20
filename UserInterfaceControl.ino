@@ -1,8 +1,8 @@
-/* 
+/*
  *  This file hides the complexity of the hardware UI
  *  It handles reading the Rotary Encoders
  *  and writing messages to the OLED screen
- *  
+ *
  */
 
 /*
@@ -12,7 +12,7 @@ void readRotaryEncoders() {
   rotaryEncoder1_read_clkPin = digitalRead(rotaryEncoder1_set_clkPin); // orange cable, CLK
   rotaryEncoder1_read_dtPin = digitalRead(rotaryEncoder1_set_dtPin);
 
-  rotaryMode; // Can be 0 1 2 or 3 (depending on which value we are changing)
+  // rotaryMode; // Can be 0 1 2 or 3 (depending on which value we are changing)
 
   if ((rotaryEncoder1_read_clkPin != rotaryEncoder1_previousRead_clkPin) && (rotaryEncoder1_read_clkPin == LOW)) { // Knob Rotated l when aVal changes, BUT use only if aVal is LOW.
     if (rotaryEncoder1_read_dtPin == LOW) {
@@ -55,9 +55,9 @@ void readRotaryEncoders() {
  * and gives them to the steppers.
  */
 void captureSettings() {
-  // each wheel is 64mm
-  // so if I make the the knob think in mm, then
-  // 1 turn is 201.06mm (64 * 3.1416)
+  // each wheel has a diameter of 64mm so if I make the the knob
+  // think in mm, then 1 turn is 201.06mm (64 * 3.1416)
+  //
   // So, if someone says 100mm, then how many turns is that?
   // turns = configuredDistance / (64 * 3.1416)
   // given that 1 turn is 2048 steps then
@@ -79,9 +79,9 @@ void captureSettings() {
 }
 
  /*
-  * 
+  *
   *  SCREEN HANDLING
-  * 
+  *
   */
 
 void report() {
@@ -109,7 +109,7 @@ void report() {
   display.display();
 }
 
-void message(String text) {
+void message(String text) { // using string object (NOT string char array)
   display.clearDisplay();
   display.setTextSize(1);
   display.setCursor(20, 40);
