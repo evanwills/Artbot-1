@@ -17,6 +17,10 @@ void rotaryEncoder::RotaryEncoder(int clockPin, int dataPin, int buttonPin, int 
 	btnPin = buttonPin;
 	position = defaultPos;
 	increment = rotaryEncoder::defaultIncrement;
+
+	pinMode(clkPin, INPUT); // clk
+	pinMode(dtPin, INPUT); // dt
+	pinMode(btnPin, INPUT_PULLUP); // btn
 }
 
 long rotaryEncoder::getPosition() {
@@ -31,6 +35,13 @@ long rotaryEncoder::getPosition( bool doRead ) {
 	return position;
 }
 
+int rotaryEncoder::buttonPress() {
+	if( digitalRead(btnPin) == LOW ) {
+		return true;
+	} else {
+		return false;
+	}
+}
 
 static void rotaryEncoder::setStartIncrement( int inc ) {
 	rotaryEncoder::defaultIncrement = inc;

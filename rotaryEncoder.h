@@ -12,6 +12,7 @@ public interface IRotaryEncoder {
 
 		virtual long getPosition();
 		virtual long getPosition( bool doRead );
+		virtual bool getButton();
 
 	private:
 		static int defaultIncrement = 1;
