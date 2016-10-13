@@ -22,6 +22,13 @@ int DumbButton::pressed() {
 		return 0;
 	}
 }
+
+/**
+ * sometimes it's necessary to make the input mode PULLUP.
+ *
+ * This is primarily for the rotaryEncoder class but may be
+ * useful elsewhere
+ */
 void DumbButton::makePinModePullup() {
 	pinMode(btnPin, INPUT_PULLUP);
 }
@@ -76,28 +83,41 @@ MultiPressButton::MultiPressButton( byte pin , int maxNoPress ) {
 }
 
 int MultiPressButton::pressed() {
-
 	if( readButtion() == true ) {
 		if ( inUse == false ) {
+			// the button has just been pressed
 			if ( counting == false ) {
+				// the button has just been pressed for the first
+				// time since it was reset. Lets remember that we're
+				// now tracking how many presses
 				counting = true;
 			}
+			// add another press to the record
 			presses = presses + 1;
 			inUse = true;
 		}
 
 		// let the caller know that the button is being pressed
-		// but that we don't know for how long yet.
+		// but that we don't know what the total number of presses
+		// is yet.
 		return -1;
 	} else {
 		int output = 0;
 		if ( counting == true ) {
+			// we know we're counting now we'll check how long it was
+			// since the button was released
 			if ( inUse == true ) {
+				// this is the first time we've noticed the button
+				// has been released let's record that time
 				notPressed = millis();
 			}
 
+			// set how many milliseconds ago was the button released
 			int duration = millis() - notPressed;
 			if( duration > maxNoPress ) {
+				// the user has stopped pressing the button for
+				// the moment
+
 				// send the number of presses to the caller
 				output = presses;
 				// reset count

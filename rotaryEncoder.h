@@ -8,8 +8,7 @@ public class IRotaryEncoder {
 public class RotaryEncoder : IRotaryEncoder {
 
 	public:
-		// void RotaryEncoder(int clockPin, int dataPin, int buttonPin );
-		RotaryEncoder( int clockPin , int dataPin , int defaultPos );
+		RotaryEncoder( int clockPin , int dataPin , int defaultPos = 0 );
 
 		long getPosition( bool read = true );
 
@@ -24,11 +23,16 @@ public class RotaryEncoder : IRotaryEncoder {
 		int increment = 1;
 }
 
-
+// This BtnRotaryEncoder inherits from both rotaryEncoder and the
+// interface for TimedButton, allowing it to be passed around as a
+// button in its own right.
+//
+// BtnRotaryEncoder can be thought of as a decorator for TimedButtons
 public class BtnRotaryEncoder : RotaryEncoder ITimedButton {
 
 	public:
 		BtnRotaryEncoder( int clockPin , int dataPin , int defaultPos , ITimedButton button );
+		// these methods are required by the ITimedButton interface
 		bool readButton();
 		int pressed();
 
