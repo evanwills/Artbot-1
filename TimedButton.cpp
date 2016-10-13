@@ -76,7 +76,7 @@ MultiPressButton::MultiPressButton( byte pin , int maxNoPress ) {
 	noPress = maxNoPress;
 }
 
-int multiPressCount::pressed() {
+int MultiPressButton::pressed() {
 
 	if( readButtion() == true ) {
 		if ( inUse == false ) {
