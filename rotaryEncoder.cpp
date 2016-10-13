@@ -11,43 +11,18 @@
 
 //void rotaryEncoder::RotaryEncoder(int clockPin, int dataPin, int buttonPin ) {
 //}
-void rotaryEncoder::RotaryEncoder(int clockPin, int dataPin, int buttonPin, int defaultPos ) {
+RotaryEncoder::RotaryEncoder( int clockPin , int dataPin , int defaultPos ) {
 	clkPin = clockPin;
 	dtPin = dataPin;
-	btnPin = buttonPin;
 	position = defaultPos;
-	increment = rotaryEncoder::defaultIncrement;
 
 	pinMode(clkPin, INPUT); // clk
 	pinMode(dtPin, INPUT); // dt
 	pinMode(btnPin, INPUT_PULLUP); // btn
 }
 
-long rotaryEncoder::getPosition() {
-	_readEncoder();
-	return position;
-}
 
-long rotaryEncoder::getPosition( bool doRead ) {
-	if (doRead != false) {
-		_readEncoder();
-	}
-	return position;
-}
-
-int rotaryEncoder::buttonPress() {
-	if( digitalRead(btnPin) == LOW ) {
-		return true;
-	} else {
-		return false;
-	}
-}
-
-static void rotaryEncoder::setStartIncrement( int inc ) {
-	rotaryEncoder::defaultIncrement = inc;
-}
-
-void rotaryEncoder::_readEncoder() {
+long RotaryEncoder::getPosition( bool doRead ) {
 	clk_value = digitalRead(clkPin);
 	dt_value  = digitalRead(dtPin);
 
@@ -59,4 +34,26 @@ void rotaryEncoder::_readEncoder() {
 		}
 	}
 	previous_clk_value = clk_value;
+	return position;
+}
+
+
+
+BtnRotaryEncoder::BtnRotaryEncoder(  int clockPin , int dataPin , int defaultPos , ITimedButton button ) {
+	clkPin = clockPin;
+	dtPin = dataPin;
+	position = defaultPos;
+	btn = button;
+
+	pinMode(clkPin, INPUT); // clk
+	pinMode(dtPin, INPUT); // dt
+}
+
+
+bool BtnRotaryEncoder::readButton() {
+	return btn->readButton();
+}
+
+int BtnRotaryEncoder::pressed() {
+	return btn->pressed();
 }

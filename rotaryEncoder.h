@@ -1,34 +1,38 @@
-public interface IRotaryEncoder {
+public class IRotaryEncoder {
 
 	public:
-		int clkPin;
-		int dtPin;
-		int btnPin;
-		int clk_value;
-		int dt_value;
-		long position;
-		int previous_clk_value;
-		int increment;
-
-		virtual long getPosition();
-		virtual long getPosition( bool doRead );
-		virtual bool getButton();
-
-	private:
-		static int defaultIncrement = 1;
-		virtual void _readEncoder();
-
-
+		virtual long getPosition( bool doRead = true );
 }
+
 
 public class RotaryEncoder : IRotaryEncoder {
 
 	public:
 		// void RotaryEncoder(int clockPin, int dataPin, int buttonPin );
-		void RotaryEncoder( int clockPin, int dataPin, int buttonPin, int defaultPos );
+		RotaryEncoder( int clockPin , int dataPin , int defaultPos );
 
-		long getPosition();
-		long getPosition( bool read );
+		long getPosition( bool read = true );
 
-		static void setStartIncrement( int inc );
+
+	protected:
+		int clkPin;
+		int dtPin;
+		int clk_value;
+		int dt_value;
+		long position;
+		int previous_clk_value;
+		int increment = 1;
+}
+
+
+public class BtnRotaryEncoder : RotaryEncoder ITimedButton {
+
+	public:
+		BtnRotaryEncoder( int clockPin , int dataPin , int defaultPos , ITimedButton button );
+		bool readButton();
+		int pressed();
+
+	protected:
+		ITimedButton btn;
+
 }
