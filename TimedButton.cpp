@@ -92,6 +92,11 @@ int MultiPressButton::pressed() {
 				// now tracking how many presses
 				counting = true;
 			}
+
+			// because this may be called many times during a single
+			// press we only want to increment once per presss so
+			// this is done within this IF statement
+
 			// add another press to the record
 			presses = presses + 1;
 			inUse = true;
@@ -120,10 +125,11 @@ int MultiPressButton::pressed() {
 
 				// send the number of presses to the caller
 				output = presses;
-				// reset count
+				// stop counting
 				counting = false;
 				// reset presses
 				presses = 0;
+				notPressed = 0;
 			} else {
 				// let the caller know we're still counting presses
 				output = -1;
@@ -131,6 +137,143 @@ int MultiPressButton::pressed() {
 		}
 		// button is no longer being pressed
 		inUse = false;
+		return output;
+	}
+}
+
+
+
+
+FixedTimeMultiPressButton::FixedTimeMultiPressButton( byte pin , int pressIntervalTime ) {
+	btnPin = pin;
+	pinMode(btnPin, INPUT);
+	pressInterval = pressIntervalTime;
+}
+
+int FixedTimeMultiPressButton::pressed() {
+	int output = 0;
+	// how long has it been since we started
+	int duration;
+	bool ended = true;
+
+	if( readButtion() == true ) {
+		output = -1;
+		if ( inUse == false ) {
+			// the button has just been pressed
+			if ( counting == false ) {
+				// the button has just been pressed for the first
+				// time since it was reset. Lets remember that we're
+				// now tracking how many presses
+				counting = true;
+
+				// start the timer
+				start = millis();
+			}
+
+			duration = millis() - start;
+			if ( duration < pressInterval ) {
+				// add another press to the record
+				presses = presses + 1;
+				inUse = true;
+			}
+		}
+
+		// let the caller know that the button is being pressed
+		// but that we don't know what the total number of presses
+		// is yet.
+		return output;
+	}
+
+	if ( counting == true ) {
+		duration = millis() - start;
+		if( duration > pressInterval ) {
+			// the user has stopped pressing the button for
+			// the moment
+
+			// send the number of presses to the caller
+			output = presses;
+			// stop counting
+			counting = false;
+			// reset presses
+			presses = 0;
+		} else {
+			// let the caller know we're still counting presses
+			output = -1;
+		}
+		inUse = false;
+	}
+	// button is no longer being pressed
+
+	return output;
+}
+
+
+
+
+
+MultiModeButton::MultiModeButton( byte pin , int pressIntervalTime ) {
+	btnPin = pin;
+	pinMode(btnPin, INPUT);
+	noPress = maxNoPress;
+}
+
+// int MultiModeButton::pressed() inherrited from TimedButton
+
+int MultiModeButton::multiPress() {
+	if( readButtion() == true ) {
+		if ( multiPressInUse == false ) {
+			// the button has just been pressed
+			if ( counting == false ) {
+				// the button has just been pressed for the first
+				// time since it was reset. Lets remember that we're
+				// now tracking how many presses
+				counting = true;
+			}
+			// because this may be called many times during a single
+			// press we only want to increment once per presss so
+			// this is done within an IF statement
+
+			// add another press to the record
+			presses = presses + 1;
+			multiPressInUse = true;
+		}
+
+		// let the caller know that the button is being pressed
+		// but that we don't know what the total number of presses
+		// is yet.
+		return -1;
+	} else {
+		int output = 0;
+		if ( counting == true ) {
+			// we know we're counting now we'll check how long it was
+			// since the button was released
+			if ( multiPressInUse == true ) {
+				// this is the first time we've noticed the button
+				// has been released let's record that time
+				notPressed = millis();
+			}
+
+			// set how many milliseconds ago was the button released
+			int duration = millis() - notPressed;
+			if( duration > maxNoPress ) {
+				// the user has stopped pressing the button for
+				// the moment
+
+				// send the number of presses to the caller
+				output = presses;
+				// stop counting
+				counting = false;
+				// reset presses
+				presses = 0;
+				// reset the not pressed value
+				notPressed = 0;
+			} else {
+				// let the caller know we're still counting presses
+				output = -1;
+			}
+		}
+		// button is no longer being pressed
+		multiPressInUse = false;
 		return output;
 	}
 }

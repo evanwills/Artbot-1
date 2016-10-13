@@ -20,7 +20,7 @@ public class ITimedButton {
 		 * reads the button's state then returns the number of
 		 * milliseconds the buttons was pressed for.
 		 */
-		virtual int presed();
+		virtual int pressed();
 
 	private:
 		/*
@@ -45,7 +45,7 @@ public class DumbButton : ITimedButton {
 		 * reads the button's state then returns zero if the button
 		 * is not pressed and one if it is.
 		 */
-		int presed();
+		int pressed();
 
 		void makePinModePullup();
 }
@@ -59,7 +59,7 @@ public class TimedButton : DumbButton {
 		 * reads the button's state then returns the number of
 		 * milliseconds the buttons was pressed for.
 		 */
-		int presed();
+		int pressed();
 
 	private:
 
@@ -92,6 +92,78 @@ public class MultiPressButton : DumbButton {
 		 */
 		unsigned long notPressed = 0;
 		bool inUse = false;
+		bool counting = false;
+		byte presses = 0;
+		/**
+		 * the maximum number of milliseconds after the button was
+		 * released that indicates no more pressing has finished.
+		 */
+		int maxNoPress = 500;
+}
+
+
+
+public class FixedTimeMultiPressButton : DumbButton {
+
+	public:
+		FixedTimeMultiPressButton( byte pin , int pressIntervalTime = 1000 );
+		/**
+		 * reads the button's state then returns the number of
+		 * times the buttons was pressed.
+		 */
+		int presed();
+
+	private:
+
+		/**
+		 * start the time in milliseconds (from when the Arduino was
+		 * turned on) the button was pressed.
+		 */
+		unsigned long start = 0;
+		int pressInterval = 0;
+		bool inUse = false;
+		bool counting = false;
+		byte presses = 0;
+		/**
+		 * the maximum number of milliseconds after the button was
+		 * released that indicates no more pressing has finished.
+		 */
+		int TimeLimit = 1000;
+}
+
+
+
+public class MultiModeButton : TimedButton {
+
+	public:
+		MultiModeButton( byte pin , int maxNoPressInterval = 500 );
+		/**
+		 * reads the button's state then returns the number of
+		 * times the buttons was pressed.
+		 */
+		int pressed();
+
+		/**
+		 * reads the button's state then returns the number of
+		 * times the buttons was pressed or -1 if the button is
+		 * currently being pressed.
+		 *
+		 * functionality copied directly from MultiPressButton::pressed()
+		 * The only difference is the variable inUse is renamed to
+		 * multiPressInUse
+		 */
+		int multiPress();
+
+		// int MultiModeButton::pressed() inherrited from TimedButton
+
+	private:
+
+		/**
+		 * start the time in milliseconds (from when the Arduino was
+		 * turned on) the button was pressed.
+		 */
+		unsigned long notPressed = 0;
+		bool multiPressInUse = false;
 		bool counting = false;
 		byte presses = 0;
 		/**
