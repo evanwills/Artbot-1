@@ -18,7 +18,6 @@ RotaryEncoder::RotaryEncoder( int clockPin , int dataPin , int defaultPos ) {
 
 	pinMode(clkPin, INPUT); // clk
 	pinMode(dtPin, INPUT); // dt
-	pinMode(btnPin, INPUT_PULLUP); // btn
 }
 
 
