@@ -72,7 +72,6 @@ int TimedButton::pressed() {
 MultiPressButton::MultiPressButton( byte pin , int maxNoPress ) {
 	btnPin = pin;
 	pinMode(btnPin, INPUT);
-	resetTime = maxNoPress * 2;
 	noPress = maxNoPress;
 }
 
