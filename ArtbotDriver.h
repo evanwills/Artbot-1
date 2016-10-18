@@ -3,14 +3,34 @@ public interface IArtbotDriver {
 		void terminate( bool end )
 		void setWheelAction(
 			byte wheelSide, // wheelSide = LEFT (0) or RIGHT (1)
-			uint distance,
+			int distance,
 			int speed,
-			uint acceleration,
-			uint deceleration
+			unsigned int acceleration,
+			unsigned int deceleration
 		)
-		void setPenDepth(float depth)
+		void setPenDepth(float depth);
+		void setPenLocation(float position);
 		bool getTravelComplete( byte wheelSide ) // wheelSide = LEFT (0) or RIGHT (1)
 		bool getEdgeReached()
 
+
+}
+
+public class ArtbotDriver : IArtbotDriver {
+	public:
+		ArtbotDriver( int maxSpeed , int maxAccelleration , int stepsPerRevolution , float wheelDiameter );
+
+		void forwardStepLeft();
+		void backwardStepLeft();
+		// wrappers for the second motor!
+		void forwardStepRight();
+		void backwardStepRight();
+
+	protected:
+		float stepFactor;
+		AF_Stepper leftAccelMotor;
+		AF_Stepper rightAccelMotor;
+		AccelStepper leftAccelMotor;
+		AccelStepper rightAccelMotor;
 
 }

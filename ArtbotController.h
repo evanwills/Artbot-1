@@ -9,6 +9,7 @@ public interface IArtbotController {
 		virtual void setEdgeReached( bool hitEdge );
 		virtual void init();
 		virtual void calculate();
+		virtual string getRequiredUI();
 
 }
 
@@ -23,14 +24,25 @@ public class ArtbotController : IArtbotController {
 		float getPenDepth();
 		void setEdgeReached( bool hitEdge );
 		void init();
+		string getUI();
 		virtual void calculate();
+	protected:
+		bool edgeHit = false;
+	private:
+		/**
+		 * used for identifying which UI to instantiate for use with this controller.
+		 */
+		string uiName[16] = ''
 }
 
 public class ArtbotControllerDefault : ArtbotController {
 	public:
 		void setValues( ArtbotSettingsDefault settings );
 		void calculate();
+
+	private:
+		/**
+		 * used for identifying which UI to instantiate for use with this controller.
+		 */
+		string uiName[16] = 'Default'
 }
-
-
-ArtBotUI::addSubClass('Default');
