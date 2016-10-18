@@ -10,16 +10,16 @@
  */
 void stopAndResetSteppers() {
   // stop everything
-  stepper1.stop(); // Stop as fast as possible: sets new target
-  stepper2.stop(); // Stop as fast as possible: sets new target
+  leftAccelMotor.stop(); // Stop as fast as possible: sets new target
+  rightAccelMotor.stop(); // Stop as fast as possible: sets new target
 
   // move both steppers to the same default position.
-  stepper1.runToPosition();
-  stepper2.runToPosition();
+  leftAccelMotor.runToPosition();
+  rightAccelMotor.runToPosition();
 
   // reset the steppers to position 0
-  stepper1.setCurrentPosition(0);
-  stepper2.setCurrentPosition(0);
+  leftAccelMotor.setCurrentPosition(0);
+  rightAccelMotor.setCurrentPosition(0);
 
   // tell the system that we are no longer drawing
   isDrawing = false;

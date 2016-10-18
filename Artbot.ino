@@ -25,28 +25,28 @@
 Adafruit_SSD1306 display(OLED_RESET);
 
 // Declare the motors (for AFMotor lib)
-AF_Stepper motor1(2048, 1);
-AF_Stepper motor2(2048, 2);
+AF_Stepper leftMotor(2048, 1);
+AF_Stepper rightMotor(2048, 2);
 
 // These methods are used as 'wrappers' so that we can use 2 motor libraries together
 // Note that each step can be SINGLE, DOUBLE, INTERLEAVE or MICROSTEP
-void forwardstep1() {
-  motor1.onestep(FORWARD, SINGLE);
+void forwardStepLeft() {
+  leftMotor.onestep(FORWARD, SINGLE);
 }
-void backwardstep1() {
-  motor1.onestep(BACKWARD, SINGLE);
+void backwardStepLeft() {
+  leftMotor.onestep(BACKWARD, SINGLE);
 }
 // wrappers for the second motor!
-void forwardstep2() {
-  motor2.onestep(BACKWARD, SINGLE);
+void forwardStepRight() {
+  rightMotor.onestep(BACKWARD, SINGLE);
 }
-void backwardstep2() {
-  motor2.onestep(FORWARD, SINGLE);
+void backwardStepRight() {
+  rightMotor.onestep(FORWARD, SINGLE);
 }
 
 // Declare the AccelStepper motors (which 'wrap' the AFMotor lib motors)
-AccelStepper stepper1(forwardstep1, backwardstep1);
-AccelStepper stepper2(forwardstep2, backwardstep2);
+AccelStepper leftAccelMotor(forwardStepLeft, backwardStepLeft);
+AccelStepper rightAccelMotor(forwardStepRight, backwardStepRight);
 
 // Default configurations of the motors
 float maxSpeedLeft = 400;
@@ -172,7 +172,7 @@ void loop() {
     }
 
   } else {
-    if (stepper1.distanceToGo() == 0) {
+    if (leftAccelMotor.distanceToGo() == 0) {
       // Reset the whole device (but user needs to wait till wheel bounces)
       // TODO: Use a parameter, not a value in the digitalRead param
       if (digitalRead(startStopBtn) == HIGH) {
@@ -180,12 +180,12 @@ void loop() {
         stopAndResetSteppers();
         report();
       }
-      stepper1.moveTo(-stepper1.currentPosition());
+      leftAccelMotor.moveTo(-leftAccelMotor.currentPosition());
     }
-    if (stepper2.distanceToGo() == 0) {
-      stepper2.moveTo(-stepper2.currentPosition());
+    if (rightAccelMotor.distanceToGo() == 0) {
+      rightAccelMotor.moveTo(-rightAccelMotor.currentPosition());
     }
-    stepper1.run();
-    stepper2.run();
+    leftAccelMotor.run();
+    rightAccelMotor.run();
   }
 }

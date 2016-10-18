@@ -64,18 +64,18 @@ void captureSettings() {
   // turns in steps = 2048 * configuredDistance / (64 * 3.1416)
 
   // RIGHT WHEEL (knobs 1 and 2 (speed))
-  stepper1.setMaxSpeed(rotaryEncoder2_positionCount * 10); // max 400
-  stepper1.setAcceleration(accelerationRight);
+  leftAccelMotor.setMaxSpeed(rotaryEncoder2_positionCount * 10); // max 400
+  leftAccelMotor.setAcceleration(accelerationRight);
   // calculate how many steps to go (here we divide by 2 because the bounce goes fowards and backwards)
   steps = (rotaryEncoder1_positionCount * 2048 / (64 * 3.1416) / 2);
-  stepper1.moveTo(steps);
+  leftAccelMotor.moveTo(steps);
   // message(String(steps) );
 
   // LEFT WHEEL (knobs 4 and 3(speed))
-  stepper2.setMaxSpeed(rotaryEncoder3_positionCount * 10); // max 400
-  stepper2.setAcceleration(accelerationLeft);
+  rightAccelMotor.setMaxSpeed(rotaryEncoder3_positionCount * 10); // max 400
+  rightAccelMotor.setAcceleration(accelerationLeft);
   steps = (rotaryEncoder4_positionCount * 2048 / (64 * 3.1416) / 2);
-  stepper2.moveTo(steps);
+  rightAccelMotor.moveTo(steps);
 }
 
  /*
